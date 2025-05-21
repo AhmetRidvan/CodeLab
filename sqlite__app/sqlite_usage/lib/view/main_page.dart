@@ -19,12 +19,26 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> add() async {
-    await PersonDao.addPerson('Zeynep', 20);
+    await PersonDao.addPerson('samet', 11);
+  }
+
+  Future<void> delete(int id) async {
+    await PersonDao.delete(id);
+  }
+
+  Future<void> update(String name, int sayi, int id) async {
+    await PersonDao.upgrade(name, sayi, id);
+  }
+
+  Future<void> count(String name) async {
+    final x = await PersonDao.count(name);
+
+    print(x); //3:07
   }
 
   @override
   void initState() {
-    add();
+    count('Mehmet');
     call();
     super.initState();
   }

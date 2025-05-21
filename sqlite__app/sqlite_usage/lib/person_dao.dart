@@ -32,4 +32,28 @@ class PersonDao {
 
     await db.insert('persons', map);
   }
+
+  static Future delete(int id) async {
+    final db = await DatabaseHelper.accessToDatabase();
+    await db.delete('persons', where: 'person_id = ?', whereArgs: [id]);
+  }
+
+  static Future<void> upgrade(String name, int age, int id) async {
+    final db = await DatabaseHelper.accessToDatabase();
+
+    Map<String, dynamic> myMap = {};
+    myMap['person_name'] = name;
+    myMap['person_age'] = age;
+
+    await db.update('persons', myMap, where: 'person_id = ?', whereArgs: [id]);
+  }
+
+  static Future<int> count(String name) async {
+    final db = await DatabaseHelper.accessToDatabase();
+
+    List<Map<String, dynamic>> listOfMaps = await db.rawQuery(
+      'SELECT count(*) AS xxx FROM persons WHERE person_name = "$name"',
+    );
+    return listOfMaps[0]['xxx'];
+  }
 }

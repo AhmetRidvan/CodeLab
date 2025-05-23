@@ -56,4 +56,34 @@ class PersonDao {
     );
     return listOfMaps[0]['xxx'];
   }
+
+  static Future<PersonModel> bringOne(int primaryKey) async {
+    final db = await DatabaseHelper.accessToDatabase();
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT * FROM persons WHERE person_id = "$primaryKey"',
+    );
+    final map = maps[0];
+
+    return PersonModel(
+      person_id: map['person_id'],
+      person_name: map['person_name'],
+      person_age: map['person_age'],
+    );
+  }
+
+  static Future<List<PersonModel>> searchByName(String name) async {
+    final db = await DatabaseHelper.accessToDatabase();
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT * FROM persons WHERE person_name LIKE "%$name%"',
+    );
+
+    return List.generate(maps.length, (index) {
+      var x = maps[index];
+      return PersonModel(
+        person_id: x['person_id'],
+        person_name: x['person_name'],
+        person_age: x['person_age'],
+      );
+    });
+  }
 }

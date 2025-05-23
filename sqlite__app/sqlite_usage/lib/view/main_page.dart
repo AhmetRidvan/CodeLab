@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqlite_usage/models/person_model.dart';
 import 'package:sqlite_usage/person_dao.dart';
 
 class MainPage extends StatefulWidget {
@@ -36,9 +37,27 @@ class _MainPageState extends State<MainPage> {
     print(x); //3:07
   }
 
+  Future<void> bringOne(int id) async {
+    PersonModel x = await PersonDao.bringOne(id);
+    print('xxxx');
+    print(x.person_name);
+    print(x.person_id);
+    print(x.person_age);
+    print('xxxx');
+  }
+
+  Future<void> searchByName(String name) async {
+    List<PersonModel> x = await PersonDao.searchByName(name);
+    for (final items in x) {
+      print('Merhaba ${items.person_id}');
+    }
+    ;
+  }
+
   @override
   void initState() {
-    count('Mehmet');
+    searchByName('e');
+    
     call();
     super.initState();
   }

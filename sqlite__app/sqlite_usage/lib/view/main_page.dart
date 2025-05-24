@@ -51,14 +51,18 @@ class _MainPageState extends State<MainPage> {
     for (final items in x) {
       print('Merhaba ${items.person_id}');
     }
-    ;
+  }
+
+  Future<void> random() async {
+    List<PersonModel> x = await PersonDao.random();
+    for (final items in x) {
+      print('Merhaba ${items.person_name}');
+    }
   }
 
   @override
   void initState() {
-    searchByName('e');
-    
-    call();
+    random();
     super.initState();
   }
 

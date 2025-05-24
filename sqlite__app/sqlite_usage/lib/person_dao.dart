@@ -86,4 +86,21 @@ class PersonDao {
       );
     });
   }
+
+
+  static Future<List<PersonModel>> random() async {
+    final db = await DatabaseHelper.accessToDatabase();
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT * FROM persons ORDER BY RANDOM() LIMIT 1',
+    );
+
+    return List.generate(maps.length, (index) {
+      var x = maps[index];
+      return PersonModel(
+        person_id: x['person_id'],
+        person_name: x['person_name'],
+        person_age: x['person_age'],
+      );
+    });
+  }
 }

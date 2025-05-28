@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/dao.dart';
 import 'package:notes_app/model/note_model.dart';
 
 class NoteDetailScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _Detail extends State<NoteDetailScreen> {
   }
 
   Future<void> delete(int note_id) async {
-    print('$note_id deleted.');
+    await NoteDao.delete(note_id);
     Navigator.of(context).pop();
   }
 
@@ -32,16 +33,37 @@ class _Detail extends State<NoteDetailScreen> {
     int grade1,
     int grade2,
   ) async {
-    print('Updated');
+    await NoteDao.upgrade(note_id, lesson_name, grade1, grade2);
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [
-        
-      ],
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              delete(widget.n1.note_id);
+            },
+            icon: Icon(Icons.delete),
+          ),
+          IconButton(
+            onPressed: () {
+              var x = widget.n1;
+              upgrade(
+                x.note_id,
+                lessonName.text,
+                int.parse(grade1.text),
+                int.parse(grade2.text),
+              );
+              print(
+                '${lessonName.text} ${int.parse(grade1.text)} ${int.parse(grade2.text)}',
+              );
+            },
+            icon: Icon(Icons.upgrade),
+          ),
+        ],
         title: Text('Note Detail'),
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/dao.dart';
 import 'package:notes_app/model/note_model.dart';
 import 'package:notes_app/views/note_detail_screen.dart';
 import 'package:notes_app/views/note_record_screen.dart';
@@ -13,15 +14,8 @@ class NoteScreen extends StatefulWidget {
 class _NoteScreenState extends State<NoteScreen> {
   Future<List<NoteModel>> showAllNotes() async {
     final list = <NoteModel>[];
+    list.addAll(await NoteDao.bringThemAll());
 
-    list.add(
-      NoteModel(note_id: 1, lesson_name: 'Matematik', grade1: 100, grade2: 78),
-    );
-    list.add(
-      NoteModel(note_id: 2, lesson_name: 'Fizik', grade1: 10, grade2: 56),
-    );
-
-    list.add(NoteModel(note_id: 3, lesson_name: 'Tıp', grade1: 63, grade2: 3));
     return list;
   }
 
@@ -55,76 +49,87 @@ class _NoteScreenState extends State<NoteScreen> {
           ],
         ),
       ),
-      body: FutureBuilder(
-        future: showAllNotes(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var items = snapshot.data;
-            return ListView.builder(
-              itemCount: items!.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return NoteDetailScreen(n1: item);
-                        },
+      body: PopScope(
+        canPop: false,
+        child: FutureBuilder(
+          future: showAllNotes(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var items = snapshot.data;
+              return ListView.builder(
+                itemCount: items!.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return NoteDetailScreen(n1: item);
+                          },
+                        ),
+                      ).then((value) {
+                        setState(() {
+                          
+                        });
+                      },);
+                    },
+                    child: Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(333),
                       ),
-                    );
-                  },
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(333),
-                    ),
-                    child: Card(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              item.lesson_name,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                      child: Card(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                item.lesson_name,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              item.grade1.toString(),
+                            Expanded(
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                item.grade1.toString(),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              item.grade2.toString(),
+                            Expanded(
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                item.grade2.toString(),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
+                  );
+                },
+              );
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return NoteRecordScreen();
-              },
-            ),
-          );
+          Navigator.of(context)
+              .push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return NoteRecordScreen();
+                  },
+                ),
+              )
+              .then((value) {
+                setState(() {});
+              });
         },
         tooltip: 'Add note',
         child: const Icon(Icons.add),

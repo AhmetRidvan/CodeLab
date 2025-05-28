@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/dao.dart';
 import 'package:notes_app/views/note_screen.dart';
 
 class NoteRecordScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _Record extends State<NoteRecordScreen> {
   final grade2 = TextEditingController();
 
   Future<void> save(String lessonName, int grade1, int grade2) async {
-    print('$lessonName $grade1 $grade2 saved.');
+    await NoteDao.add(lessonName, grade1, grade2);
     Navigator.of(context).pop();
   }
 

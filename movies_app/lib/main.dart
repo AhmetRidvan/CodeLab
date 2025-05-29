@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
       ),
-      home: const CategoriesScreen(), //7:52
+      home: const CategoriesScreen(), //36:33
     );
   }
 }

@@ -4,10 +4,10 @@ class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key});
 
   @override
-  State<DetailScreen> createState() => _CategoriesState();
+  State<DetailScreen> createState() => _DetailScreen();
 }
 
-class _CategoriesState extends State<DetailScreen> {
+class _DetailScreen extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

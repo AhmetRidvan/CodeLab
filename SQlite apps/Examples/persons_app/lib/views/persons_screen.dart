@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persons_app/models/person_model.dart';
+import 'package:persons_app/views/persons_dao.dart';
 import 'package:persons_app/views/persons_detail_screen.dart';
 import 'package:persons_app/views/persons_record_screen.dart';
 
@@ -17,28 +18,19 @@ class _PersonsScreenState extends State<PersonsScreen> {
   Future<List<PersonModel>> bringThemAll() async {
     var list = <PersonModel>[];
 
-    PersonModel p1 = PersonModel(
-      person_id: 1,
-      person_name: 'Zeynep',
-      person_number: '5415385744',
-    );
-    PersonModel p2 = PersonModel(
-      person_id: 2,
-      person_name: 'Alnaz',
-      person_number: '5414253244',
-    );
-    PersonModel p3 = PersonModel(
-      person_id: 3,
-      person_name: 'Michele',
-      person_number: '5134143114',
-    );
+    list = await PersonsDao.bringThemAll();
+    return list;
+  }
 
-    list.addAll([p1, p2, p3]);
+  Future<List<PersonModel>> search(String word) async {
+    var list = <PersonModel>[];
+
+    list = await PersonsDao.search(word);
     return list;
   }
 
   Future<void> delete(int person_id) async {
-    print('$person_id deleted');
+    await PersonsDao.delete(person_id);
     setState(() {});
   }
 
@@ -81,7 +73,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
       body: PopScope(
         canPop: false,
         child: FutureBuilder(
-          future: bringThemAll(),
+          future: isSearching ? search(searchText) : bringThemAll(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final items = snapshot.data;

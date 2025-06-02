@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:persons_app/models/person_model.dart';
+import 'package:persons_app/views/persons_dao.dart';
 
 class PersonsRecord extends StatefulWidget {
   PersonsRecord({super.key});
-
-  
 
   @override
   State<PersonsRecord> createState() => _PersonsRecordState();
@@ -15,6 +14,7 @@ class _PersonsRecordState extends State<PersonsRecord> {
   final cPersonPhone = TextEditingController();
 
   Future<void> record(String person_name, String person_number) async {
+    await PersonsDao.add(person_name, person_number);
     Navigator.pop(context);
   }
 

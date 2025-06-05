@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:json_app/view/main_page.dart';
+import 'package:json_app2/view/main_page.dart';
 
 void main() {
   runApp(const MyApp());

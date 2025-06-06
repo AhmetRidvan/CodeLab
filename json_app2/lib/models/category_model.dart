@@ -6,8 +6,8 @@ class CategoryModel {
 
   factory CategoryModel.fromJson(Map<String, dynamic> jsonData) {
     return CategoryModel(
-      category_id: jsonData['kategori_id'],
-      category_name: jsonData['kategori_ad'], //4:1
+      category_id: jsonData['kategori_id']as String,
+      category_name: jsonData['kategori_ad']as String, //4:1
     );
   }
 }

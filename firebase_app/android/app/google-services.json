@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "369868001825",
+    "firebase_url": "https://kasim-adalan-320ed-default-rtdb.firebaseio.com",
+    "project_id": "kasim-adalan-320ed",
+    "storage_bucket": "kasim-adalan-320ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369868001825:android:3734534f37f814050c0960",
+        "android_client_info": {
+          "package_name": "com.example.firebase_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAL5n8CivF5w7Ibl3OgV2Vq-NGSRR8CXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

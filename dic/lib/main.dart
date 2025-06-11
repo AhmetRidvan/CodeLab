@@ -84,14 +84,19 @@ class _AnasayfaState extends State<Anasayfa> {
         stream: refx.onValue,
         builder: (context, event) {
           if (event.hasData) {
-            var kelimelerListesi = [];
+            var kelimelerListesi = <Kelimeler>[];
             final incomingData = event.data!.snapshot.value as Map;
             print(incomingData);
 
             incomingData.forEach((key, value) {
-              kelimelerListesi.add(
-                Kelimeler.fromJson(Map<String, dynamic>.from(value)),
-              );
+              final word = Kelimeler.fromJson(Map<String, dynamic>.from(value));
+              if (aramaYapiliyorMu) {
+                if (word.ingilizce.contains(aramaKelimesi)) {
+                  kelimelerListesi.add(word);
+                }
+              } else {
+                kelimelerListesi.add(word);
+              }
             });
 
             return ListView.builder(

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "57662847310",
+    "project_id": "general-b2d51",
+    "storage_bucket": "general-b2d51.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57662847310:android:2a13f92b1ee0aa0cd6461f",
+        "android_client_info": {
+          "package_name": "com.example.filmler_firebase_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtMBJgsAKJ0zPL-uPpq8r7QTZcxSwNBRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

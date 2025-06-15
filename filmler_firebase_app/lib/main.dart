@@ -2,6 +2,7 @@ import 'package:filmler_firebase_app/FilmlerSayfa.dart';
 import 'package:filmler_firebase_app/Kategoriler.dart';
 import 'package:filmler_firebase_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -31,29 +32,28 @@ class Anasayfa extends StatefulWidget {
 }
 
 class _AnasayfaState extends State<Anasayfa> {
-  Future<List<Kategoriler>> tumKategorileriGoster() async {
-    var kategoriListesi = <Kategoriler>[];
-
-    var k1 = Kategoriler(1, "Komedi");
-    var k2 = Kategoriler(2, "Bilim Kurgu");
-
-    kategoriListesi.add(k1);
-    kategoriListesi.add(k2);
-
-    return kategoriListesi;
-  }
+  final r = FirebaseDatabase.instance.ref('kategoriler');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Kategoriler")),
-      body: FutureBuilder<List<Kategoriler>>(
-        future: tumKategorileriGoster(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var kategoriListesi = snapshot.data;
+      body: StreamBuilder(
+        stream: r.onValue,
+        builder: (context, x) {
+          if (x.hasData) {
+            var data = x.data!.snapshot.value as Map;
+            List<Kategoriler> kategoriListesi = [];
+
+            data.forEach((key, value) {
+              
+              kategoriListesi.add(
+                Kategoriler.fromJson(key, Map<String, dynamic>.from(value)),
+              );
+            });
+
             return ListView.builder(
-              itemCount: kategoriListesi!.length,
+              itemCount: kategoriListesi.length,
               itemBuilder: (context, indeks) {
                 var kategori = kategoriListesi[indeks];
                 return GestureDetector(

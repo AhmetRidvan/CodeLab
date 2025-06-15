@@ -1,8 +1,8 @@
-
 import 'package:filmler_firebase_app/DetaySayfa.dart';
 import 'package:filmler_firebase_app/Filmler.dart';
 import 'package:filmler_firebase_app/Kategoriler.dart';
-import 'package:filmler_firebase_app/Yonetmenler.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/material.dart';
 
 class FilmlerSayfa extends StatefulWidget {
@@ -15,38 +15,34 @@ class FilmlerSayfa extends StatefulWidget {
 }
 
 class _FilmlerSayfaState extends State<FilmlerSayfa> {
-  Future<List<Filmler>> filmleriGoster(int kategori_id) async {
-    var filmlerListesi = <Filmler>[];
-
-    var k1 = Kategoriler(1, "Komedi");
-    var y1 = Yonetmenler(1, "Quentin Tarantino");
-
-    var f1 = Filmler(1, "Anadoluda", 2008, "anadoluda.png", k1, y1);
-    var f2 = Filmler(2, "Django", 2009, "django.png", k1, y1);
-    var f3 = Filmler(3, "Inception", 2010, "inception.png", k1, y1);
-
-    filmlerListesi.add(f1);
-    filmlerListesi.add(f2);
-    filmlerListesi.add(f3);
-
-    return filmlerListesi;
-  }
+  final r = FirebaseDatabase.instance.ref('filmler');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Filmler : ${widget.kategori.kategori_ad}")),
-      body: FutureBuilder<List<Filmler>>(
-        future: filmleriGoster(widget.kategori.kategori_id),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var filmlerListesi = snapshot.data;
+      body: StreamBuilder(
+        stream: r
+            .orderByChild('kategori_ad')
+            .equalTo(widget.kategori.kategori_ad)
+            .onValue,
+        builder: (context, x) {
+          if (x.hasData) {
+            var data = x.data!.snapshot.value as Map;
+            List<Filmler> filmlerListesi = [];
+
+            data.forEach((key, value) {
+              filmlerListesi.add(
+                Filmler.fromJson(key, Map<String, dynamic>.from(value)),
+              );
+            });
+
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 2 / 3.5,
               ),
-              itemCount: filmlerListesi!.length,
+              itemCount: filmlerListesi.length,
               itemBuilder: (context, indeks) {
                 var film = filmlerListesi[indeks];
                 return GestureDetector(
@@ -64,7 +60,7 @@ class _FilmlerSayfaState extends State<FilmlerSayfa> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.asset("resimler/${film.film_resim}"),
+                          child: Image.network('http://kasimadalan.pe.hu/filmler/resimler/${film.film_resim}'),
                         ),
                         Text(
                           film.film_ad,

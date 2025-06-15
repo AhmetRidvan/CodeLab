@@ -1,7 +1,10 @@
+import 'dart:convert';
 
 import 'package:filmler_http_app/FilmlerSayfa.dart';
 import 'package:filmler_http_app/Kategoriler.dart';
+import 'package:filmler_http_app/KategorilerCevap.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
@@ -28,57 +31,57 @@ class Anasayfa extends StatefulWidget {
 }
 
 class _AnasayfaState extends State<Anasayfa> {
+  Future<List<Kategoriler>> parseKategoriler(String map) async {
+    return Kategorilercevap.fromJson(jsonDecode(map)).kategoriler;
+  }
 
   Future<List<Kategoriler>> tumKategorileriGoster() async {
-    var kategoriListesi = <Kategoriler>[];
-
-    var k1 = Kategoriler(1, "Komedi");
-    var k2 = Kategoriler(2, "Bilim Kurgu");
-
-    kategoriListesi.add(k1);
-    kategoriListesi.add(k2);
-
-    return kategoriListesi;
+    final url = Uri.parse(
+      'http://kasimadalan.pe.hu/filmler/tum_kategoriler.php',
+    );
+    final response = await http.get(url);
+    return parseKategoriler(response.body);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Kategoriler"),
-      ),
+      appBar: AppBar(title: Text("Kategoriler")),
       body: FutureBuilder<List<Kategoriler>>(
         future: tumKategorileriGoster(),
-        builder: (context,snapshot){
-          if(snapshot.hasData){
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
             var kategoriListesi = snapshot.data;
             return ListView.builder(
               itemCount: kategoriListesi!.length,
-              itemBuilder: (context,indeks){
+              itemBuilder: (context, indeks) {
                 var kategori = kategoriListesi[indeks];
                 return GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FilmlerSayfa(kategori: kategori,)));
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FilmlerSayfa(kategori: kategori),
+                      ),
+                    );
                   },
                   child: Card(
-                    child: SizedBox(height: 50,
+                    child: SizedBox(
+                      height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(kategori.kategori_ad),
-                        ],
+                        children: [Text(kategori.kategori_ad)],
                       ),
                     ),
                   ),
                 );
               },
             );
-          }else{
+          } else {
             return Center();
           }
         },
       ),
-
     );
   }
 }

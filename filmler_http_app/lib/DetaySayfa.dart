@@ -22,7 +22,7 @@ class _DetaySayfaState extends State<DetaySayfa> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Image.asset("resimler/${widget.film.film_resim}"),
+            Image.network('http://kasimadalan.pe.hu/filmler/resimler/${widget.film.film_resim}'),
             Text(widget.film.film_yil.toString(),style: TextStyle(fontSize: 30),),
             Text(widget.film.yonetmen.yonetmen_ad,style: TextStyle(fontSize: 30),),
           ],

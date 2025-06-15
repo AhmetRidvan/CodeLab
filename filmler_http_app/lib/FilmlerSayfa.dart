@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:filmler_http_app/DetaySayfa.dart';
 import 'package:filmler_http_app/Filmler.dart';
+import 'package:filmler_http_app/FilmlerCevap.dart';
 import 'package:filmler_http_app/Kategoriler.dart';
 import 'package:filmler_http_app/Yonetmenler.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class FilmlerSayfa extends StatefulWidget {
   Kategoriler kategori;
@@ -14,21 +18,20 @@ class FilmlerSayfa extends StatefulWidget {
 }
 
 class _FilmlerSayfaState extends State<FilmlerSayfa> {
+  List<Filmler> parseFilmler(String body) {
+    return Filmlercevap.fromJson(jsonDecode(body)).list;
+  }
+
   Future<List<Filmler>> filmleriGoster(int kategori_id) async {
-    var filmlerListesi = <Filmler>[];
+    final url = Uri.parse(
+      'http://kasimadalan.pe.hu/filmler/filmler_by_kategori_id.php',
+    );
 
-    var k1 = Kategoriler(1, "Komedi");
-    var y1 = Yonetmenler(1, "Quentin Tarantino");
+    Map<String, dynamic> m = {'kategori_id': kategori_id .toString()};
 
-    var f1 = Filmler(1, "Anadoluda", 2008, "anadoluda.png", k1, y1);
-    var f2 = Filmler(2, "Django", 2009, "django.png", k1, y1);
-    var f3 = Filmler(3, "Inception", 2010, "inception.png", k1, y1);
+    final x = await http.post(url, body: m);
 
-    filmlerListesi.add(f1);
-    filmlerListesi.add(f2);
-    filmlerListesi.add(f3);
-
-    return filmlerListesi;
+    return parseFilmler(x.body);
   }
 
   @override
@@ -36,7 +39,7 @@ class _FilmlerSayfaState extends State<FilmlerSayfa> {
     return Scaffold(
       appBar: AppBar(title: Text("Filmler : ${widget.kategori.kategori_ad}")),
       body: FutureBuilder<List<Filmler>>(
-        future: filmleriGoster(widget.kategori.kategori_id),
+        future: filmleriGoster(int.parse(widget.kategori.kategori_id)),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var filmlerListesi = snapshot.data;
@@ -63,7 +66,9 @@ class _FilmlerSayfaState extends State<FilmlerSayfa> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.asset("resimler/${film.film_resim}"),
+                          child: Image.network(
+                            "http://kasimadalan.pe.hu/filmler/resimler/${film.film_resim}",
+                          ),
                         ),
                         Text(
                           film.film_ad,

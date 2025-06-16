@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:kisiler_http_app/KisiDetaySayfa.dart';
 import 'package:kisiler_http_app/KisiKayitSayfa.dart';
 import 'package:kisiler_http_app/Kisiler.dart';
+import 'package:http/http.dart' as http;
+import 'package:kisiler_http_app/kisilerCevap.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,19 +35,34 @@ class _AnasayfaState extends State<Anasayfa> {
   bool aramaYapiliyorMu = false;
   String aramaKelimesi = "";
 
-  Future<List<Kisiler>> tumKisileriGoster() async {
-    var kisilerListesi = <Kisiler>[];
+  List<Kisiler> parseKisiler(String body) {
+    return KisilerCevap.jsonParse(jsonDecode(body)).list;
+  }
 
-    return kisilerListesi;
+  Future<List<Kisiler>> tumKisileriGoster() async {
+    final url = Uri.parse('http://kasimadalan.pe.hu/kisiler/tum_kisiler.php');
+    final x = await http.get(url);
+    return parseKisiler(x.body);
+  }
+
+  Future<List<Kisiler>> search(String aramaKelimesi) async {
+    final url = Uri.parse(
+      'http://kasimadalan.pe.hu/kisiler/tum_kisiler_arama.php',
+    );
+
+    Map<String, dynamic> mapa = {'kisi_ad': aramaKelimesi};
+    final x = await http.post(url, body: mapa);
+    return parseKisiler(x.body);
   }
 
   Future<void> sil(int kisi_id) async {
-    print("$kisi_id silindi");
+    final url = Uri.parse(
+      'http://kasimadalan.pe.hu/kisiler/delete_kisiler.php',
+    );
+    final map = {'kisi_id': kisi_id.toString()};
+    final x = await http.post(url, body: map);
+    print(x.body);
     setState(() {});
-  }
-
-  Future<bool> uygulamayiKapat() async {
-    await exit(0);
   }
 
   @override
@@ -88,7 +106,9 @@ class _AnasayfaState extends State<Anasayfa> {
       body: PopScope(
         canPop: false,
         child: FutureBuilder<List<Kisiler>>(
-          future: tumKisileriGoster(),
+          future: aramaYapiliyorMu
+              ? search(aramaKelimesi)
+              : tumKisileriGoster(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var kisilerListesi = snapshot.data;
@@ -111,16 +131,26 @@ class _AnasayfaState extends State<Anasayfa> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text(
-                              kisi.kisi_ad,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Expanded(
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                kisi.kisi_ad,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                            Text(kisi.kisi_tel),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.black54),
-                              onPressed: () {
-                                sil(kisi.kisi_id);
-                              },
+                            Expanded(
+                              child: Text(
+                                kisi.kisi_tel,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: IconButton(
+                                icon: Icon(Icons.delete, color: Colors.black54),
+                                onPressed: () {
+                                  sil(int.parse(kisi.kisi_id));
+                                },
+                              ),
                             ),
                           ],
                         ),

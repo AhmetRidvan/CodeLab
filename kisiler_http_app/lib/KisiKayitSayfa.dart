@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kisiler_http_app/main.dart';
-
+import 'package:http/http.dart' as http;
 
 class KisiKayitSayfa extends StatefulWidget {
   @override
@@ -8,24 +8,26 @@ class KisiKayitSayfa extends StatefulWidget {
 }
 
 class _KisiKayitSayfaState extends State<KisiKayitSayfa> {
-
   var tfKisiAdi = TextEditingController();
   var tfKisiTel = TextEditingController();
 
-  Future<void> kayit(String kisi_ad,String kisi_tel) async {
-    print("$kisi_ad - $kisi_tel kayıt edildi");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Anasayfa()));
+  Future<void> kayit(String kisi_ad, String kisi_tel) async {
+    final url = Uri.parse('http://kasimadalan.pe.hu/kisiler/insert_kisiler.php');
+    final data = {'kisi_ad': kisi_ad, 'kisi_tel': kisi_tel};
+    await http.post(url,body: data);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Anasayfa()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Kişi Kayıt"),
-      ),
+      appBar: AppBar(title: Text("Kişi Kayıt")),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.only(left: 50,right: 50),
+          padding: const EdgeInsets.only(left: 50, right: 50),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -42,7 +44,7 @@ class _KisiKayitSayfaState extends State<KisiKayitSayfa> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){
+        onPressed: () {
           kayit(tfKisiAdi.text, tfKisiTel.text);
         },
         tooltip: 'Kişi Kayıt',

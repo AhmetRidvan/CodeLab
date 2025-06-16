@@ -16,7 +16,7 @@ class _KisiDetaySayfaState extends State<KisiDetaySayfa> {
   var tfKisiAdi = TextEditingController();
   var tfKisiTel = TextEditingController();
 
-  Future<void> guncelle(int kisi_id,String kisi_ad,String kisi_tel) async {
+  Future<void> guncelle(String kisi_id,String kisi_ad,String kisi_tel) async {
     print("$kisi_ad - $kisi_tel güncellendi");
     Navigator.push(context, MaterialPageRoute(builder: (context) => Anasayfa()));
   }

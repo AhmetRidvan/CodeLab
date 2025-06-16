@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:kisiler_http_app/KisiDetaySayfa.dart';
 import 'package:kisiler_http_app/KisiKayitSayfa.dart';
@@ -9,7 +10,7 @@ import 'package:kisiler_http_app/firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(MyApp()); //21:55
 }
 
 class MyApp extends StatelessWidget {
@@ -33,22 +34,13 @@ class Anasayfa extends StatefulWidget {
 }
 
 class _AnasayfaState extends State<Anasayfa> {
+  final r = FirebaseDatabase.instance.ref('kisiler');
   bool aramaYapiliyorMu = false;
   String aramaKelimesi = "";
 
-  Future<List<Kisiler>> tumKisileriGoster() async {
-    var kisilerListesi = <Kisiler>[];
-
-    return kisilerListesi;
-  }
-
-  Future<void> sil(int kisi_id) async {
+  Future<void> sil(String kisi_id) async {
     print("$kisi_id silindi");
     setState(() {});
-  }
-
-  Future<bool> uygulamayiKapat() async {
-    await exit(0);
   }
 
   @override
@@ -91,15 +83,32 @@ class _AnasayfaState extends State<Anasayfa> {
       ),
       body: PopScope(
         canPop: false,
-        child: FutureBuilder<List<Kisiler>>(
-          future: tumKisileriGoster(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var kisilerListesi = snapshot.data;
+        child: StreamBuilder(
+          stream: r.onValue,
+          builder: (context, x) {
+            if (x.hasData) {
+              var data = x.data!.snapshot.value as Map;
+              List<Kisiler> list = [];
+
+              data.forEach((key, value) {
+                final object = Kisiler.fromJson(
+                  key,
+                  Map<String, dynamic>.from(value),
+                );
+
+                if (aramaYapiliyorMu) {
+                  if (object.kisi_ad.contains(aramaKelimesi)) {
+                    list.add(object);
+                  }
+                } else {
+                  list.add(object);
+                }
+              });
+              print(list.length);
               return ListView.builder(
-                itemCount: kisilerListesi!.length,
+                itemCount: list!.length,
                 itemBuilder: (context, indeks) {
-                  var kisi = kisilerListesi[indeks];
+                  var kisi = list[indeks];
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(

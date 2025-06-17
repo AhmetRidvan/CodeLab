@@ -1,7 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:kisiler_http_app/Kisiler.dart';
 import 'package:kisiler_http_app/main.dart';
-
 
 class KisiDetaySayfa extends StatefulWidget {
   Kisiler kisi;
@@ -15,10 +16,19 @@ class KisiDetaySayfa extends StatefulWidget {
 class _KisiDetaySayfaState extends State<KisiDetaySayfa> {
   var tfKisiAdi = TextEditingController();
   var tfKisiTel = TextEditingController();
+  final r = FirebaseDatabase.instance.ref('kisiler');
 
-  Future<void> guncelle(String kisi_id,String kisi_ad,String kisi_tel) async {
-    print("$kisi_ad - $kisi_tel güncellendi");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Anasayfa()));
+  Future<void> guncelle(String kisi_id, String kisi_ad,
+   String kisi_tel) async {
+    final map = {
+      'kisi_ad' : kisi_ad,
+      'kisi_tel' : kisi_tel,
+    };
+    r.child(kisi_id).update(map);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Anasayfa()),
+    );
   }
 
   @override
@@ -32,12 +42,10 @@ class _KisiDetaySayfaState extends State<KisiDetaySayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Kişi Detay"),
-      ),
+      appBar: AppBar(title: Text("Kişi Detay")),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.only(left: 50,right: 50),
+          padding: const EdgeInsets.only(left: 50, right: 50),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -54,7 +62,7 @@ class _KisiDetaySayfaState extends State<KisiDetaySayfa> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){
+        onPressed: () {
           guncelle(widget.kisi.kisi_id, tfKisiAdi.text, tfKisiTel.text);
         },
         tooltip: 'Kişi Güncelle',

@@ -39,8 +39,7 @@ class _AnasayfaState extends State<Anasayfa> {
   String aramaKelimesi = "";
 
   Future<void> sil(String kisi_id) async {
-    print("$kisi_id silindi");
-    setState(() {});
+    r.child(kisi_id).remove();
   }
 
   @override

@@ -15,9 +15,20 @@ class _MainPageState extends State<MainPage> {
   List<Marker> _markers = [];
   BitmapDescriptor? customIkon;
 
-  void createIkon() {
-    ImageConfiguration i1 = ImageConfiguration();
-    BitmapDescriptor.fromAssetImage(i1, 'images/bugatti-chiron-seeklogo.png'); 
+  void createIcon(BuildContext context) {
+    ImageConfiguration i1 = createLocalImageConfiguration(context);
+    BitmapDescriptor.fromAssetImage(i1, 'images/cactus_1164858.png').then((
+      value,
+    ) {
+      setState(() {
+        customIkon = value;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   final Completer<GoogleMapController> _mapController =
@@ -33,6 +44,7 @@ class _MainPageState extends State<MainPage> {
 
     final _goMarker = Marker(
       markerId: MarkerId('0'),
+      icon: customIkon!,
       position: LatLng(37.3096516, -122.1261991),
       infoWindow: InfoWindow(title: 'Cupertino', snippet: 'Apple'),
     );
@@ -50,6 +62,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    createIcon(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

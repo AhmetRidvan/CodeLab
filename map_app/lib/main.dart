@@ -3,7 +3,7 @@ import 'package:map_app/views/main_page.dart';
 
 
 void main() {
-  runApp(const MyApp()); //3:17 
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

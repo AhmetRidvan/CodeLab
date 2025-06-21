@@ -1,3 +1,5 @@
+import 'package:contacts_app/model/person_model.dart';
+import 'package:contacts_app/views/details_page.dart';
 import 'package:contacts_app/views/main_page.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
       ),
-      home: MainPage(),
+      home: MainPage()
     );
   }
 }

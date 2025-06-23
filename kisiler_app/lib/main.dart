@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:usage_app/cubits/main_page_cubit.dart';
-import 'package:usage_app/views/main_page.dart';
+import 'package:kisiler_app/cubit/anasayfa_cubit.dart';
+import 'package:kisiler_app/cubit/kisi_detay_cubit.dart';
+import 'package:kisiler_app/cubit/kisi_kayit_cubit.dart';
+import 'package:kisiler_app/views/anasayfa.dart';
+
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) {
-            return MainPageCubit();
-          },
-        ),
+        BlocProvider(create: (context) => KisiKayitCubit()),
+        BlocProvider(create: (context) => KisiDetayCubit()),
+        BlocProvider(create: (context) => AnasayfaCubit()),
       ],
       child: MaterialApp(
+        title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
+          primarySwatch: Colors.blue,
         ),
-        home: MainPage(),
+        home: const Anasayfa(),
       ),
     );
   }
 }
+

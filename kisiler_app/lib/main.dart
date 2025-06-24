@@ -6,7 +6,7 @@ import 'package:kisiler_app/cubit/kisi_kayit_cubit.dart';
 import 'package:kisiler_app/views/anasayfa.dart';
 
 
-void main() {
+void main() {// 19:10
   runApp(const MyApp());
 }
 

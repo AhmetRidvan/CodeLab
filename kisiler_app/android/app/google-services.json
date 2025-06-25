@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1000233146493",
+    "project_id": "example-ff875",
+    "storage_bucket": "example-ff875.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000233146493:android:2fe4ebdcbab5648f26f914",
+        "android_client_info": {
+          "package_name": "com.example.kisiler_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn8R-lTMVH7pXZ_f9CpYO9wjzc-FuVWMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

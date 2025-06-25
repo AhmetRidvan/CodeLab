@@ -1,12 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kisiler_app/cubit/anasayfa_cubit.dart';
 import 'package:kisiler_app/cubit/kisi_detay_cubit.dart';
 import 'package:kisiler_app/cubit/kisi_kayit_cubit.dart';
+import 'package:kisiler_app/firebase_options.dart';
 import 'package:kisiler_app/views/anasayfa.dart';
 
 
-void main() {// 19:10
+void main() async{
+WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

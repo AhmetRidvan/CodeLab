@@ -9,11 +9,11 @@ class Kisiler {
     required this.kisi_tel,
   });
 
-  factory Kisiler.fromJson(Map<String, dynamic> jsonData) {
+  factory Kisiler.fromJson(String key, Map<String, dynamic> jsonData) {
     return Kisiler(
-      kisi_id: jsonData['kisi_id'] as String,
-      kisi_ad: jsonData['kisi_ad'] as String,
-      kisi_tel: jsonData['kisi_tel'] as String,
+      kisi_id: key,
+      kisi_ad: jsonData['kisi_ad'],
+      kisi_tel: jsonData['kisi_tel'],
     );
   }
 }

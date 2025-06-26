@@ -1,0 +1,1 @@
+TickerProviderStateMixin vsync için 
